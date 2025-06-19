@@ -23,13 +23,10 @@ async function fetchShowAndSeason() {
   const episodesRes = await fetch(`${apiUrl}/show/${route.params.id}/episodes`)
   const episodesData = await episodesRes.json()
   episodes.value = episodesData.filter(ep => ep.season === parseInt(route.params.seasonNumber))
-  console.log(episodes.value)
-  
 }
 
 async function playEpisode(episodeId) {
-  currentMediaUrl.value = `${apiUrl}/stream/${route.params.id}/${route.params.seasonNumber}/${episodeId}`
-  console.log(currentMediaUrl.value)
+  router.push(`/show/${route.params.id}/season/${route.params.seasonNumber}/file/${episodeId}`)
 }
 
 function skip(seconds) {
@@ -93,22 +90,6 @@ onUnmounted(() => {
           <p>Length: {{ episode.runtime }}</p>
           <p>{{ episode.title }}</p>
         </div>
-      </div>
-    </div>
-
-    <!-- Video Player -->
-    <div v-if="currentMediaUrl" class="video-player">
-      <div class="player-header">
-        <h3>Now Playing</h3>
-        <button @click="currentMediaUrl = null">✕</button>
-      </div>
-      <video ref="videoPlayer" controls>
-        <source :src="currentMediaUrl" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div class="player-controls">
-        <button @click="skip(-10)">⏪ Back 10s</button>
-        <button @click="skip(10)">⏩ Forward 10s</button>
       </div>
     </div>
   </div>
@@ -189,58 +170,5 @@ onUnmounted(() => {
   margin: 0.5rem 0 0;
   font-size: 0.8rem;
   color: #999;
-}
-
-.video-player {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 400px;
-  background: #000;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.player-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: rgba(0, 0, 0, 0.8);
-}
-
-.player-header button {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 1.2rem;
-}
-
-.player-controls {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
-}
-
-button {
-  background: #e50914;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-button:hover {
-  background: #f40612;
-}
-
-video {
-  width: 100%;
-  height: auto;
 }
 </style> 

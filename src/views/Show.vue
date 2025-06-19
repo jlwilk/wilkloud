@@ -35,7 +35,6 @@ function handleKeydown(e) {
 }
 
 onMounted(() => {
-  console.log("Show mounted")
   fetchShowDetails()
   window.addEventListener('keydown', handleKeydown)
 })

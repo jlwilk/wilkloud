@@ -13,7 +13,7 @@ async function fetchRecentlyAdded() {
 }
 
 function selectShow(show) {
-  router.push(`/shows/${show.id}`)
+  router.push(`/show/${show.id}`)
 }
 
 onMounted(() => {
