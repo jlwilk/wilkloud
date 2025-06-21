@@ -1,57 +1,49 @@
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
 const apiUrl = import.meta.env.VITE_API_URL
-const selectedShow = ref(null)
-const currentMediaUrl = ref('')
-const videoPlayer = ref(null)
+
+type Show = {
+  id: number
+  title: string
+  year: number
+  network: string
+  certification: string
+  overview: string
+  images?: Array<{ coverType: string; remoteUrl: string }>
+  seasons: Array<{
+    seasonNumber: number
+    statistics: {
+      episodeCount: number
+      sizeOnDisk: number
+    }
+  }>
+}
+
+const selectedShow = ref<Show | null>(null)
 
 async function fetchShowDetails() {
-  const showRes = await fetch(`${apiUrl}/show/${route.params.id}`)
+  const showRes = await fetch(`${apiUrl}/show/${route.params.showId}`)
   const showData = await showRes.json()
+  console.log(showData)
   selectedShow.value = showData
-}
-
-async function playEpisode(episodeId) {
-  currentMediaUrl.value = `${apiUrl}/episodes/${episodeId}`
-}
-
-function skip(seconds) {
-  if (videoPlayer.value) {
-    videoPlayer.value.currentTime += seconds
-  }
-}
-
-function handleKeydown(e) {
-  if (!videoPlayer.value) return
-  if (e.key === 'ArrowRight') {
-    skip(10)
-  } else if (e.key === 'ArrowLeft') {
-    skip(-10)
-  }
 }
 
 onMounted(() => {
   fetchShowDetails()
-  window.addEventListener('keydown', handleKeydown)
 })
 
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeydown)
-})
 </script>
 
 <template>
   <div v-if="selectedShow" class="show-details">
     <div class="show-header">
-      <img 
-        :src="selectedShow.images?.find(img => img.coverType === 'fanart')?.remoteUrl" 
-        :alt="selectedShow.title"
-        class="show-background"
-      />
+      <img v-if="selectedShow?.images" :src="selectedShow.images.find(img => img.coverType === 'poster')?.remoteUrl"
+        :alt="selectedShow.title" />
+      class="show-background" />
       <div class="show-header-content">
         <h2>{{ selectedShow.title }}</h2>
         <p class="show-meta">
@@ -65,37 +57,17 @@ onUnmounted(() => {
     </div>
 
     <div class="seasons">
-      <div 
-        v-for="season in selectedShow.seasons.filter(s => s.seasonNumber > 0)" 
-        :key="season.seasonNumber"
-        class="season-section"
-      >
+      <div v-for="season in selectedShow.seasons.filter(s => s.seasonNumber > 0)" :key="season.seasonNumber"
+        class="season-section">
         <div class="season-header">
           <h3>Season {{ season.seasonNumber }}</h3>
           <div class="season-stats">
             <span>{{ season.statistics.episodeCount }} Episodes</span>
-            <span>{{ (season.statistics.sizeOnDisk / 1024 / 1024 / 1024).toFixed(1) }} GB</span>
           </div>
           <button @click="router.push(`/show/${selectedShow.id}/season/${season.seasonNumber}`)">
             View Season
           </button>
         </div>
-      </div>
-    </div>
-
-    <!-- Video Player -->
-    <div v-if="currentMediaUrl" class="video-player">
-      <div class="player-header">
-        <h3>Now Playing</h3>
-        <button @click="currentMediaUrl = null">✕</button>
-      </div>
-      <video ref="videoPlayer" controls>
-        <source :src="currentMediaUrl" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div class="player-controls">
-        <button @click="skip(-10)">⏪ Back 10s</button>
-        <button @click="skip(10)">⏩ Forward 10s</button>
       </div>
     </div>
   </div>
@@ -224,4 +196,4 @@ video {
   width: 100%;
   height: auto;
 }
-</style> 
+</style>

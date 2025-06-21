@@ -1,13 +1,24 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const apiUrl = import.meta.env.VITE_API_URL
-const shows = ref([])
+const shows = ref<Show[]>([])
 const currentPage = ref(1)
 const totalPages = ref(1)
 const pageSize = ref(20)
+
+interface Show {
+  id: number
+  title: string
+  year: number
+  network: string
+  images?: {
+    coverType: string;
+    remoteUrl: string;
+  }[];
+}
 
 async function fetchShows() {
   const res = await fetch(`${apiUrl}/shows?page=${currentPage.value}&pageSize=${pageSize.value}`)
@@ -16,7 +27,7 @@ async function fetchShows() {
   totalPages.value = Math.ceil(data.total / pageSize.value)
 }
 
-function selectShow(showId) {
+function selectShow(showId: number) {
   router.push(`/show/${showId}`)
 }
 
@@ -28,14 +39,14 @@ onMounted(() => {
 <template>
   <div class="shows">
     <div class="shows-grid">
-      <div 
-        v-for="show in shows" 
+      <div
+        v-for="show in shows"
         :key="show.id"
         class="show-card"
         @click="selectShow(show.id)"
       >
-        <img 
-          :src="show.images?.find(img => img.coverType === 'poster')?.remoteUrl" 
+        <img
+          :src="show.images?.find(img => img.coverType === 'poster')?.remoteUrl"
           :alt="show.title"
         />
         <div class="show-info">
@@ -48,14 +59,14 @@ onMounted(() => {
     </div>
 
     <div class="pagination">
-      <button 
+      <button
         :disabled="currentPage === 1"
         @click="currentPage--; fetchShows()"
       >
         Previous
       </button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button 
+      <button
         :disabled="currentPage === totalPages"
         @click="currentPage++; fetchShows()"
       >
@@ -144,4 +155,4 @@ onMounted(() => {
 .pagination span {
   color: #999;
 }
-</style> 
+</style>

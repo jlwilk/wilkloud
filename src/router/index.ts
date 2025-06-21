@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
-import Shows from '../views/Shows.vue'
-import Show from '../views/Show.vue'
-import Season from '../views/Season.vue'
+import TvShows from '../views/TvShows.vue'
+import TvShow from '../views/TvShow.vue'
+import TvSeason from '../views/TvSeason.vue'
 import FilePlayer from '../views/FilePlayer.vue'
 
 const router = createRouter({
@@ -16,20 +16,20 @@ const router = createRouter({
     {
       path: '/shows',
       name: 'shows',
-      component: Shows
+      component: TvShows
     },
     {
-      path: '/show/:id',
+      path: '/show/:showId',
       name: 'show',
-      component: Show
+      component: TvShow
     },
     {
-      path: '/show/:id/season/:seasonNumber',
+      path: '/show/:showId/season/:seasonNumber',
       name: 'season',
-      component: Season
+      component: TvSeason
     },
     {
-      path: '/show/:showId/season/:seasonNumber/file/:fileId',
+      path: '/show/:showId/season/:seasonNumber/episode/:episodeId',
       name: 'file-player',
       component: FilePlayer
     }
