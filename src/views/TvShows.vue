@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import apiUrl from '@utils/api'
 
 const router = useRouter()
-const apiUrl = import.meta.env.VITE_API_URL
 const shows = ref<Show[]>([])
 const currentPage = ref(1)
 const totalPages = ref(1)

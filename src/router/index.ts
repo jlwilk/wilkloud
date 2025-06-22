@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
+import TvDashboard from '../views/TvDashboard.vue'
 import TvShows from '../views/TvShows.vue'
 import TvShow from '../views/TvShow.vue'
 import TvSeason from '../views/TvSeason.vue'
@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'dashboard',
-      component: Dashboard
+      component: TvDashboard
     },
     {
       path: '/shows',

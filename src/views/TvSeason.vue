@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import apiUrl from '@utils/api'
 
 interface Image {
   coverType: string
@@ -34,7 +35,6 @@ interface Episode {
 
 const route = useRoute()
 const router = useRouter()
-const apiUrl = import.meta.env.VITE_API_URL
 const show = ref<Show | null>(null)
 const season = ref<Season | null>(null)
 const episodes = ref<Episode[] | null>(null)

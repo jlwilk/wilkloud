@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import apiUrl from '@utils/api'
 
 // It's best practice to move these to a shared `types.ts` file
 interface Show {
@@ -18,7 +19,6 @@ interface Episode {
 
 const route = useRoute()
 const router = useRouter()
-const apiUrl = import.meta.env.VITE_API_URL
 
 // Reactive state
 const show = ref<Show | null>(null)
