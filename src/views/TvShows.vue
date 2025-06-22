@@ -15,9 +15,9 @@ interface Show {
   year: number
   network: string
   images?: {
-    coverType: string;
-    remoteUrl: string;
-  }[];
+    coverType: string
+    remoteUrl: string
+  }[]
 }
 
 async function fetchShows() {
