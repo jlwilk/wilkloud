@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import apiUrl from '@utils/api'
 
 const route = useRoute()
 const router = useRouter()
-const apiUrl = import.meta.env.VITE_API_URL
 
 type Show = {
   id: number

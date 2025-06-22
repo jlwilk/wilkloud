@@ -25,8 +25,8 @@ onMounted(() => {
   <div class="dashboard">
     <section class="hero">
       <div v-if="recentlyAdded.length > 0" class="hero-content">
-        <img 
-          :src="recentlyAdded[0].images.find(img => img.coverType === 'fanart')?.remoteUrl" 
+        <img
+          :src="recentlyAdded[0].images.find(img => img.coverType === 'fanart')?.remoteUrl"
           :alt="recentlyAdded[0].title"
           class="hero-background"
         />
@@ -41,14 +41,14 @@ onMounted(() => {
     <section class="content-section">
       <h2>Recently Added</h2>
       <div class="show-row">
-        <div 
-          v-for="show in recentlyAdded.slice(1, 7)" 
-          :key="show.id" 
+        <div
+          v-for="show in recentlyAdded.slice(1, 7)"
+          :key="show.id"
           class="show-card"
           @click="selectShow(show)"
         >
-          <img 
-            :src="show.images.find(img => img.coverType === 'poster')?.remoteUrl" 
+          <img
+            :src="show.images.find(img => img.coverType === 'poster')?.remoteUrl"
             :alt="show.title"
           />
           <div class="show-info">
@@ -141,4 +141,4 @@ onMounted(() => {
   margin: 0;
   font-size: 1rem;
 }
-</style> 
+</style>
