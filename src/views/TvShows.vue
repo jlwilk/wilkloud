@@ -5,9 +5,6 @@ import apiUrl from '@utils/api'
 
 const router = useRouter()
 const shows = ref<Show[]>([])
-const currentPage = ref(1)
-const totalPages = ref(1)
-const pageSize = ref(20)
 
 interface Show {
   id: number
@@ -21,10 +18,11 @@ interface Show {
 }
 
 async function fetchShows() {
-  const res = await fetch(`${apiUrl}/shows?page=${currentPage.value}&pageSize=${pageSize.value}`)
+  const res = await fetch(`${apiUrl}/shows`)
   const data = await res.json()
-  shows.value = data.results
-  totalPages.value = Math.ceil(data.total / pageSize.value)
+  shows.value = data.sort((a: Show, b: Show) =>
+    a.title.localeCompare(b.title)
+  )
 }
 
 function selectShow(showId: number) {
@@ -56,22 +54,6 @@ onMounted(() => {
           </p>
         </div>
       </div>
-    </div>
-
-    <div class="pagination">
-      <button
-        :disabled="currentPage === 1"
-        @click="currentPage--; fetchShows()"
-      >
-        Previous
-      </button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button
-        :disabled="currentPage === totalPages"
-        @click="currentPage++; fetchShows()"
-      >
-        Next
-      </button>
     </div>
   </div>
 </template>
