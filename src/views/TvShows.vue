@@ -20,9 +20,11 @@ interface Show {
 async function fetchShows() {
   const res = await fetch(`${apiUrl}/shows`)
   const data = await res.json()
-  shows.value = data.sort((a: Show, b: Show) =>
-    a.title.localeCompare(b.title)
-  )
+  shows.value = data.sort((a: Show, b: Show) => {
+    const titleA = a.title.replace(/^The /i, '')
+    const titleB = b.title.replace(/^The /i, '')
+    return titleA.localeCompare(titleB)
+  })
 }
 
 function selectShow(showId: number) {
@@ -60,13 +62,17 @@ onMounted(() => {
 
 <style scoped>
 .shows {
+  /* Add max-width and auto margin for better viewing on ultra-wide screens */
+  max-width: 1920px;
+  margin: 0 auto;
   padding: 2rem;
   padding-top: 4rem;
 }
 
 .shows-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  /* This grid is already responsive. It will create as many 200px columns as can fit. */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 2rem;
   margin-bottom: 2rem;
 }
@@ -107,34 +113,14 @@ onMounted(() => {
   color: #999;
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.pagination button {
-  background: #e50914;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.pagination button:disabled {
-  background: #666;
-  cursor: not-allowed;
-}
-
-.pagination button:hover:not(:disabled) {
-  background: #f40612;
-}
-
-.pagination span {
-  color: #999;
+/* For tablets and mobile phones, reduce padding and gaps for a better layout */
+@media (max-width: 768px) {
+  .shows {
+    padding: 1rem;
+    padding-top: 2rem;
+  }
+  .shows-grid {
+    gap: 1rem;
+  }
 }
 </style>
