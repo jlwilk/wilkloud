@@ -94,7 +94,6 @@ async function fetchEpisodeDetails() {
   }
 }
 
-// Function to navigate back to the season view
 function goBackToSeason() {
   if (showId.value && seasonNumber.value !== null) {
     router.push(`/show/${showId.value}/season/${seasonNumber.value}`)
@@ -103,45 +102,43 @@ function goBackToSeason() {
   }
 }
 
-// Fetch data when the component is mounted
 onMounted(() => {
   fetchEpisodeDetails()
 })
 </script>
 
 <template>
-  <div class="player-page">
-    <div v-if="isLoading" class="loading-state">
+  <div class="px-8 mt-16 flex justify-center items-start min-h-[calc(100vh-4rem)]">
+    <div v-if="isLoading" class="text-center mt-[10vh]">
       <p>Loading player...</p>
     </div>
 
-    <div v-else-if="error" class="error-state">
+    <div v-else-if="error" class="text-center mt-[10vh]">
       <h2>Error</h2>
       <p>{{ error }}</p>
-      <button @click="goBackToSeason">Go Back</button>
+      <button @click="goBackToSeason" class="mt-4 bg-zinc-800 text-white px-6 py-3 rounded hover:bg-zinc-700">
+        Go Back
+      </button>
     </div>
 
-    <div v-else-if="show && episode" class="player-content">
-      <div class="player-header">
+    <div v-else-if="show && episode" class="w-full max-w-screen-xl flex flex-col gap-6">
+      <div class="flex justify-between items-center flex-wrap gap-4">
         <div class="title-info">
-          <h1>{{ show.title }}</h1>
-          <h2>S{{ String(seasonNumber).padStart(2, '0') }}E{{ String(episodeNumber).padStart(2, '0') }}: {{ episode.title }}</h2>
+          <h1 class="text-2xl font-semibold m-0">{{ show.title }}</h1>
+          <h2 class="text-lg text-zinc-400 font-normal mt-1 m-0">S{{ String(seasonNumber).padStart(2, '0') }}E{{ String(episodeNumber).padStart(2, '0') }}: {{ episode.title }}</h2>
         </div>
-        <button @click="goBackToSeason" class="back-button">← Back to Season</button>
+        <button @click="goBackToSeason" class="bg-zinc-800 text-white px-6 py-3 rounded hover:bg-zinc-700 text-base">
+          ← Back to Season
+        </button>
       </div>
 
-      <div class="video-container">
-        <video
-          class="video-player"
-          :src="videoUrl"
-          controls
-          autoplay
-        >
+      <div class="w-full bg-black rounded-lg overflow-hidden shadow-[0_8px_25px_rgba(0,0,0,0.5)]">
+        <video class="w-full aspect-video block" :src="videoUrl" controls autoplay>
           Your browser does not support the video tag.
         </video>
       </div>
 
-      <div v-if="episode.overview" class="episode-overview">
+      <div v-if="episode.overview" class="bg-zinc-900 text-zinc-300 p-6 rounded-lg leading-relaxed">
         <p>{{ episode.overview }}</p>
       </div>
     </div>
@@ -149,87 +146,4 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.player-page {
-  padding: 2rem;
-  margin-top: 4rem; /* Account for fixed navbar */
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: calc(100vh - 4rem);
-}
-
-.loading-state, .error-state {
-  text-align: center;
-  margin-top: 10vh;
-}
-
-.error-state button {
-  margin-top: 1rem;
-}
-
-.player-content {
-  width: 100%;
-  max-width: 1400px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.player-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.title-info h1 {
-  margin: 0;
-  font-size: 1.8rem;
-  font-weight: 600;
-}
-
-.title-info h2 {
-  margin: 0.25rem 0 0;
-  font-size: 1.2rem;
-  color: #ccc;
-  font-weight: 400;
-}
-
-.back-button {
-  background: #333;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s;
-}
-
-.back-button:hover {
-  background: #444;
-}
-
-.video-container {
-  width: 100%;
-  background: #000;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-}
-
-.video-player {
-  width: 100%;
-  aspect-ratio: 16/9;
-  display: block;
-}
-
-.episode-overview {
-  background: #1f1f1f;
-  padding: 1.5rem;
-  border-radius: 8px;
-  color: #ddd;
-  line-height: 1.6;
-}
 </style>
