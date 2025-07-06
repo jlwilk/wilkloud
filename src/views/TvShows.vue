@@ -38,8 +38,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-screen-2xl mx-auto px-8 py-16">
-    <div class="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-8 mb-8">
+  <div class="w-full px-2 py-8">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-8 mb-8">
       <div
         v-for="show in shows"
         :key="show.id"
@@ -61,6 +61,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-</style>
