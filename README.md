@@ -59,3 +59,39 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+### WebOs
+
+Make sure your are connected to your tv
+
+```sh
+ares-setup-device --list
+```
+
+```sh
+pnpm run build
+```
+
+Copy icon.png into the dist folder.
+
+Copy the appingo.json into the dist folder.
+
+You'll need to fix the index.html:
+
+
+```sh
+Remove <link href="/src/style.css" rel="stylesheet">
+```
+```sh
+Remove the forward slashes before all of the paths.
+```
+```sh
+ares-package dist/
+```
+```sh
+ ares-install --device TV .\com.wilkloud.playarr_1.0.0_all.ipk
+```
+You can launch the app from the terminal too
+```sh
+ares-launch com.wilkloud.playarr
+```

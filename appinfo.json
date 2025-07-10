@@ -1,0 +1,9 @@
+{
+  "id": "com.wilkloud.playarr",
+  "version": "1.0.0",
+  "vendor": "Wilkloud LLC.",
+  "type": "web",
+  "main": "index.html",
+  "title": "Playarr",
+  "icon": "icon.png"
+}
