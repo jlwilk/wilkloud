@@ -72,21 +72,8 @@ ares-setup-device --list
 pnpm run build
 ```
 
-Copy icon.png into the dist folder.
-
-Copy the appingo.json into the dist folder.
-
-You'll need to fix the index.html:
-
-
 ```sh
-Remove <link href="/src/style.css" rel="stylesheet">
-```
-```sh
-Remove the forward slashes before all of the paths.
-```
-```sh
-ares-package dist/
+ares-package dist-webos/
 ```
 ```sh
  ares-install --device TV .\com.wilkloud.playarr_1.0.0_all.ipk

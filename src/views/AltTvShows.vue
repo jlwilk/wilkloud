@@ -31,22 +31,35 @@ function selectShow(showId: number) {
   router.push(`/show/${showId}`)
 }
 
-const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
-alphabet.unshift('#')
-
-const showsByLetter = computed(() => {
-  const grouped: Record<string, Show[]> = {}
-  for (const letter of alphabet) grouped[letter] = []
+const availableLetters = computed(() => {
+  const letters = new Set<string>();
   for (const show of shows.value) {
-    const firstChar = show.title.replace(/^The /i, '').charAt(0).toUpperCase()
+    const firstChar = show.title.replace(/^The /i, '').charAt(0).toUpperCase();
     if (/\d/.test(firstChar)) {
-      grouped['#'].push(show)
-    } else if (grouped[firstChar]) {
-      grouped[firstChar].push(show)
+      letters.add('#');
+    } else {
+      letters.add(firstChar);
     }
   }
-  return grouped
-})
+  return Array.from(letters).sort((a, b) => {
+    if (a === '#') return -1;
+    if (b === '#') return 1;
+    return a.localeCompare(b);
+  });
+});
+
+const showsByLetter = computed(() => {
+  const grouped: Record<string, Show[]> = {};
+  for (const letter of availableLetters.value) grouped[letter] = [];
+  for (const show of shows.value) {
+    const firstChar = show.title.replace(/^The /i, '').charAt(0).toUpperCase();
+    const key = /\d/.test(firstChar) ? '#' : firstChar;
+    if (grouped[key]) {
+      grouped[key].push(show);
+    }
+  }
+  return grouped;
+});
 
 onMounted(() => {
   fetchShows()
@@ -54,12 +67,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="alt-shows-bg">
     <div class="shows-container">
-      <!-- Alphabet Sidebar (right side, tall links) -->
+      <!-- Alphabet Sidebar -->
       <div class="alphabet-sidebar">
         <a
-          v-for="letter in alphabet"
+          v-for="letter in availableLetters"
           :key="letter"
           :href="`#letter-${letter}`"
           class="alphabet-link"
@@ -70,7 +83,7 @@ onMounted(() => {
       </div>
       <!-- Shows Grid -->
       <div class="shows-grid">
-        <template v-for="letter in alphabet" :key="letter">
+        <template v-for="letter in availableLetters" :key="letter">
           <template v-if="showsByLetter[letter] && showsByLetter[letter].length">
             <div :id="`letter-${letter}`" class="letter-anchor">
               <div class="sr-only">{{ letter }}</div>
@@ -101,6 +114,12 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.alt-shows-bg {
+  background: #000;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .css-warning {
   background: #b91c1c;
   color: #fff;

@@ -32,22 +32,35 @@ function selectShow(showId: number) {
   router.push(`/show/${showId}`)
 }
 
-const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
-alphabet.unshift('#')
-
-const showsByLetter = computed(() => {
-  const grouped: Record<string, Show[]> = {}
-  for (const letter of alphabet) grouped[letter] = []
+const availableLetters = computed(() => {
+  const letters = new Set<string>();
   for (const show of shows.value) {
-    const firstChar = show.title.replace(/^The /i, '').charAt(0).toUpperCase()
+    const firstChar = show.title.replace(/^The /i, '').charAt(0).toUpperCase();
     if (/\d/.test(firstChar)) {
-      grouped['#'].push(show)
-    } else if (grouped[firstChar]) {
-      grouped[firstChar].push(show)
+      letters.add('#');
+    } else {
+      letters.add(firstChar);
     }
   }
-  return grouped
-})
+  return Array.from(letters).sort((a, b) => {
+    if (a === '#') return -1;
+    if (b === '#') return 1;
+    return a.localeCompare(b);
+  });
+});
+
+const showsByLetter = computed(() => {
+  const grouped: Record<string, Show[]> = {};
+  for (const letter of availableLetters.value) grouped[letter] = [];
+  for (const show of shows.value) {
+    const firstChar = show.title.replace(/^The /i, '').charAt(0).toUpperCase();
+    const key = /\d/.test(firstChar) ? '#' : firstChar;
+    if (grouped[key]) {
+      grouped[key].push(show);
+    }
+  }
+  return grouped;
+});
 
 onMounted(() => {
   fetchShows()
@@ -66,12 +79,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- Removed warning div, just show the main content -->
     <div class="relative w-full px-2 py-8 flex justify-center">
-      <!-- Alphabet Sidebar (right side, tall links) -->
+      <!-- Alphabet Sidebar -->
       <div class="hidden md:flex flex-col items-center fixed right-2 top-1/2 -translate-y-1/2 z-10 h-[80vh] justify-between">
         <a
-          v-for="letter in alphabet"
+          v-for="letter in availableLetters"
           :key="letter"
           :href="`#letter-${letter}`"
           class="text-zinc-400 hover:text-white text-xs font-bold py-2 px-3 rounded transition flex items-center justify-center h-full"
@@ -82,7 +94,7 @@ onMounted(() => {
       </div>
       <!-- Shows Grid -->
       <div class="w-full max-w-screen-2xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-8 mb-8">
-        <template v-for="letter in alphabet" :key="letter">
+        <template v-for="letter in availableLetters" :key="letter">
           <template v-if="showsByLetter[letter] && showsByLetter[letter].length">
             <div :id="`letter-${letter}`" class="col-span-full">
               <div class="sr-only">{{ letter }}</div>
