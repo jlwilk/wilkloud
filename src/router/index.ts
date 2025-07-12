@@ -4,6 +4,8 @@ import TvShows from '../views/TvShows.vue'
 import TvShow from '../views/TvShow.vue'
 import TvSeason from '../views/TvSeason.vue'
 import FilePlayer from '../views/FilePlayer.vue'
+import AltTvShows from '../views/AltTvShows.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +34,11 @@ const router = createRouter({
       path: '/show/:showId/season/:seasonNumber/episode/:episodeId',
       name: 'file-player',
       component: FilePlayer
+    },
+    {
+      path: '/alt-shows',
+      name: 'alt-shows',
+      component: AltTvShows
     }
   ]
 })
